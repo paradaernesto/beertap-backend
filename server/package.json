@@ -1,0 +1,19 @@
+{
+  "name": "beertapp-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-docker": "pm2-docker start pm2.json --env docker",
+    "start": "node index.js",
+    "startDev": "NODE_ENV=development node index.js",
+    "startProd": "NODE_ENV=production node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "morgan": "^1.8.2"
+  }
+}

@@ -1,0 +1,32 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=drfootprint
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_USER=docker
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: thajeztah/pgadmin4
+    ports:
+      - "5050:5050"
+    depends_on:
+      - db
+    links:
+      - db
+  backend:
+    build: ./server
+    environment:
+    - NODE_ENV=docker
+    working_dir: /usr/src/app
+    command: sh start-docker.sh
+    volumes:
+    - "./server:/usr/src/app"
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db
