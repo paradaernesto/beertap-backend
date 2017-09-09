@@ -3,7 +3,7 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=drfootprint
+      - POSTGRES_DB=beertap-dev
       - POSTGRES_PASSWORD=docker
       - POSTGRES_USER=docker
     volumes:
