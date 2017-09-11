@@ -1,20 +1,24 @@
+const env = process.env.NODE_ENV || 'docker';
+const config = require('./config/config.json')[env];
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-
-// Set up the express app
 const app = express();
 
-// Log requests to the console.
-app.use(logger('dev'));
-
-// Parse incoming requests data (https://github.com/expressjs/body-parser)
+app.use(logger('development'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to Titos page.',
-}));
+var jwt = require('jsonwebtoken');
+var User = require('./models').User; 
+  
+var apiRoutes = express.Router();  
+// apply the routes to our application with the prefix /api
+app.use('/api', apiRoutes);
+
+require('./routes')(apiRoutes);
+app.get('/', (req, res) => {
+  res.send("tito's api");
+})
 
 app.listen(8090);

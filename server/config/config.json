@@ -1,11 +1,12 @@
 {
-  "development": {
+  "docker": {
     "username": "docker",
     "password": "docker",
     "database": "beertap-dev",
-    "host": "127.0.0.1",
+    "host": "db",
     "dialect": "postgres",
-    "port": 5432
+    "port": 5432,
+    "secret": "jwtsecretkey"
   },
   "test": {
     "username": "beer",

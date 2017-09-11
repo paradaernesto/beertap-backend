@@ -5,7 +5,7 @@
     "ignore_watch": ["node_modules"],
     "autorestart": true,
     "env": {
-        "NODE_ENV": "development"
+        "NODE_ENV": "docker"
     },
     "env_production": {
         "NODE_ENV": "production"
