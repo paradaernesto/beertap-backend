@@ -1,21 +1,21 @@
 'use strict';
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('BeerTypes', {
+  up: function(queryInterface, Sequelize) {
+    return queryInterface.createTable('OrderItems', {
       id: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      name: {
-        type: Sequelize.STRING
+      beerType: {
+        type: Sequelize.STRINGE
       },
       liters: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
-      notes: {
-        type: Sequelize.TEXT
+      order: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -33,10 +33,19 @@ module.exports = {
           key: 'id',
           as: 'userId'
         }
+      },
+      orderId: {
+        type: Sequelize.UUID,
+        onDelete: 'CASCADE',
+        references : {
+          model: 'Orders',
+          key: 'id',
+          as: 'orderId'
+        }
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('BeerTypes');
+  down: function(queryInterface, Sequelize) {
+    return queryInterface.dropTable('OrderItems');
   }
 };

@@ -4,9 +4,9 @@ module.exports = {
     return queryInterface.createTable('Cookings', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       state: {
         type: Sequelize.STRING
@@ -15,7 +15,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       liters: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        min: 0,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
@@ -24,6 +26,15 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      beerTypeId: {
+        type: Sequelize.UUID,
+        onDelete: 'CASCADE',
+        references : {
+          model: 'BeerTypes',
+          key: 'id',
+          as: 'beerTypeId'
+        }
       }
     });
   },

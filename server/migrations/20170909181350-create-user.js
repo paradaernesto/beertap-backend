@@ -10,11 +10,16 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true
+        }
       },
       password: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        len: [5,20]
       },
       breweryName: {
         allowNull: false,

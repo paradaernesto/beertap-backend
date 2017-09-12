@@ -1,20 +1,23 @@
 'use strict';
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('BeerIngredients', {
+  up: function(queryInterface, Sequelize) {
+    return queryInterface.createTable('Orders', {
       id: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      breweryInput: {
+      date: {
+        type: Sequelize.DATE
+      },
+      name: {
         type: Sequelize.STRING
       },
-      quantity: {
-        type: Sequelize.FLOAT
+      address: {
+        type: Sequelize.STRING
       },
-      beerType: {
+      phoneNumber: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -27,7 +30,7 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('BeerIngredients');
+  down: function(queryInterface, Sequelize) {
+    return queryInterface.dropTable('Orders');
   }
 };

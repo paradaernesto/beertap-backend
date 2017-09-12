@@ -1,17 +1,17 @@
 'use strict';
 const Sequelize = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  var BreweryInput = sequelize.define('BreweryInput', {
+module.exports = function(sequelize, DataTypes) {
+  var Order = sequelize.define('Order', {
     id: {
       allowNull: false,
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
     },
+    date: DataTypes.DATE,
     name: DataTypes.STRING,
-    price: DataTypes.FLOAT,
-    stock: DataTypes.FLOAT,
-    unit: DataTypes.STRING
+    address: DataTypes.STRING,
+    phoneNumber: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
@@ -19,5 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-  return BreweryInput;
+  Order.associate = (models) => {
+    Order.hasMany(models.OrderItem, {
+      foreignKey: 'orderItemId',
+      as: 'orderItems'
+    });
+  }
+  return Order;
 };

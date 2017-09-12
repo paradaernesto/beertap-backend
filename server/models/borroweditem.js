@@ -1,11 +1,12 @@
 'use strict';
+const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   var BorrowedItem = sequelize.define('BorrowedItem', {
     id: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: Sequelize.UUIDV4
     },
     name: DataTypes.STRING,
     item: DataTypes.TEXT,
@@ -32,5 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
   };
+
   return BorrowedItem;
 };
