@@ -3,7 +3,26 @@ var jwt = require('jsonwebtoken');
 const env = process.env.NODE_ENV || 'docker';
 const config = require('../config/config.json')[env];
 
+const promiseJWTVerify = (token) => new Promise((resolve, reject) => {
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve(decoded);
+    }
+  });
+});
+
 module.exports = {
+    verify (req, res, next) {
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
+        promiseJWTVerify(token)
+          .then(decoded => {
+            req.appUser = decpded;
+            next();
+          })
+          .catch(err => res.status(401).json())
+    },
     authenticate(req, res) {
         return User
         .find({
@@ -32,6 +51,6 @@ module.exports = {
             message: 'An error has ocurred',
             error: error
           });
-        }) 
+        });
     }
 }
