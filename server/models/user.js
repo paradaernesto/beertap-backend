@@ -1,5 +1,7 @@
 'use strict';
 const Sequelize = require('sequelize');
+const bcrypt = require('bcryptjs');
+
 module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
     id: {
@@ -21,13 +23,24 @@ module.exports = (sequelize, DataTypes) => {
       len: [5,20]
     },
     breweryName: DataTypes.STRING
-  }, {
+  },
+  {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
       }
-    }
-  });
+  },
+  // {
+  //   beforeSave: (instance, options) => {
+  //     if (instance.changed('password') {
+  //       bcrypt.genSalt(10, (err, salt) => {
+  //         bcrypt.hash(user.password, salt, (err, hash) => {
+  //           user.password = hash;
+  //         });
+  //       }
+  //     }
+  // }
+});
 
   User.associate = (models) => {
     User.hasMany(models.BorrowedItem, {

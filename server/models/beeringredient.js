@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  OrderItem.associate = (models) => {
-    OrderItem.belongsTo(models.BeerType, {
+  BeerIngredient.associate = (models) => {
+    BeerIngredient.belongsTo(models.BeerType, {
       foreignKey: 'beerTypeId',
       onDelete: 'CASCADE'
     });
