@@ -9,10 +9,9 @@ app.use(logger('development'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var jwt = require('jsonwebtoken');
-var User = require('./models').User; 
-  
-var apiRoutes = express.Router();  
+var User = require('./models').User;
+
+var apiRoutes = express.Router();
 // apply the routes to our application with the prefix /api
 app.use('/api', apiRoutes);
 

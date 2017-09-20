@@ -2,6 +2,14 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcryptjs');
 
+const encryptPasswordIfChanged = (user, options) => {
+  if (user.changed('password')) {
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(user.password, salt);
+    user.password = hash;
+  }
+}
+
 module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
     id: {
@@ -22,25 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       len: [5,20]
     },
-    breweryName: DataTypes.STRING
-  },
-  {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-  },
-  // {
-  //   beforeSave: (instance, options) => {
-  //     if (instance.changed('password') {
-  //       bcrypt.genSalt(10, (err, salt) => {
-  //         bcrypt.hash(user.password, salt, (err, hash) => {
-  //           user.password = hash;
-  //         });
-  //       }
-  //     }
-  // }
+    breweryName: DataTypes.STRING,
+
 });
+
+  User.beforeSave(encryptPasswordIfChanged);
 
   User.associate = (models) => {
     User.hasMany(models.BorrowedItem, {

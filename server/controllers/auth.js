@@ -2,6 +2,7 @@ const User = require('../models').User;
 var jwt = require('jsonwebtoken');
 const env = process.env.NODE_ENV || 'docker';
 const config = require('../config/config.json')[env];
+const bcrypt = require('bcryptjs');
 
 const promiseJWTVerify = (token) => new Promise((resolve, reject) => {
   jwt.verify(token, config.secret, (err, decoded) => {
@@ -18,7 +19,7 @@ module.exports = {
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
         promiseJWTVerify(token)
           .then(decoded => {
-            req.appUser = decpded;
+            req.appUser = decoded;
             next();
           })
           .catch(err => res.status(401).json())
@@ -34,16 +35,22 @@ module.exports = {
               message: 'User not found'
             });
           }
-          if (user.password != req.body.password) { // TODO: improve
-            res.status(401).send({
-              message: 'Wrong password'
-            });
-          } else {
-           var token = jwt.sign({email: user.email}, config.secret, { expiresIn: '1h' });
-           res.json({
-            token: token
-          });
-          }
+
+          bcrypt.compare(req.body.password, user.password)
+          .then(resBcrypt => {
+            if (resBcrypt) {
+              var token = jwt.sign({email: user.email}, config.secret, { expiresIn: '1h' });
+              res.json({
+               token: token
+             });
+            } else {
+              res.status(401).send({
+                message: 'Wrong password'
+              });
+            }
+          })
+          .catch(err => { console.log(err) });
+
         })
         .catch(error => {
           console.log(error)
