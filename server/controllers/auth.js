@@ -20,7 +20,11 @@ module.exports = {
         promiseJWTVerify(token)
           .then(decoded => {
             req.appUser = decoded;
-            next();
+            User.find({ where: { email: decoded.email } })
+            .then(user => { 
+              req.user = user; 
+              next(); 
+            });          
           })
           .catch(err => res.status(401).json())
     },
@@ -39,7 +43,7 @@ module.exports = {
           bcrypt.compare(req.body.password, user.password)
           .then(resBcrypt => {
             if (resBcrypt) {
-              var token = jwt.sign({email: user.email}, config.secret, { expiresIn: '1h' });
+              var token = jwt.sign({email: user.email}, config.secret, { expiresIn: '24h' });
               res.json({
                token: token
              });
