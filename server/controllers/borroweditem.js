@@ -1,4 +1,5 @@
 const BorrowedItem = require('../models').BorrowedItem;
+const pagination = require('../utils/pagination');
 
 const registerBorrowedItem = (req, res) => {
     BorrowedItem.create({
@@ -17,27 +18,28 @@ const registerBorrowedItem = (req, res) => {
 }
 
 const itemsForUser = (req, res) => {
-    let limit = (req.query.limit > 0 && req.query.limit < 10) ? req.query.limit : 5;
-    let page = (req.query.page > 0) ? req.query.page : 1;
+    let paginationParams = pagination.params(req);
     let name = req.query.name ? req.query.name : '';
     let query = { 
         userId: req.user.id, 
         name: { $iLike: `%${ name }%` } 
     }
-    BorrowedItem.findAndCountAll({ where: query })
-    .then( data => {
-        let pages = Math.ceil(data.count / limit);
-        BorrowedItem.findAll({
-            where: query,
-            limit: limit,
-            offset: (page - 1) * limit    
+    BorrowedItem.findAndCountAll({
+         where: query, 
+         limit: paginationParams.limit,
+         offset: paginationParams.offset  
         })
-        .then(items => {
-            res.send({ items: items, pages: pages, currentPage: page });
-        })          
+    .then( data => {
+        let pages = Math.ceil(data.count / paginationParams.limit);
+        res.send({ 
+            items: data.rows, 
+            pages: pages, 
+            currentPage: paginationParams.page 
+        });          
     })
     .catch(error => {
-        res.status(400).send({"message": "an error has occurred"});
+        console.log(error)
+        res.status(400).send({"message": "an error occurred while processing your request"});
     })
 }
 
@@ -52,7 +54,7 @@ const itemDetail = (req, res) => {
     .then(item => {
         res.send(item)
     })
-    .catch(error => res.status(400).send({message: 'error'}));
+    .catch(error => res.status(400).send({message: 'an error occurred'}));
 }
 
 const updateItem = (req, res) => {
@@ -66,7 +68,7 @@ const updateItem = (req, res) => {
         item.update(itemParams(req))
         .then(item => res.send(item))
     })
-    .catch(error => res.status(400).send({message: 'error'}));
+    .catch(error => res.status(400).send({message: 'an error occurred during update'}));
 }
 
 const itemParams = (req) => {

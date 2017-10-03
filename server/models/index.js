@@ -15,7 +15,7 @@ if (config.use_env_variable) {
 }
 //  Force sync all models
 //  sequelize.drop();
- sequelize.sync({force: true});
+//  sequelize.sync({force: true});
 
 fs
   .readdirSync(__dirname)
